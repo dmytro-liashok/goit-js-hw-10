@@ -9,27 +9,25 @@ let optionEl = null;
 
 loaderEl.classList.remove('hidden');
 
-setTimeout(() => {
-  fetchBreeds()
-    .then(cats => {
-      cats.forEach(cat => {
-        markupCatOptions(cat);
-      });
-      selectEl.addEventListener('change', onOptionClick);
-
-      selectEl.classList.remove('hidden');
-      loaderEl.classList.add('hidden');
-    })
-    .catch(error => {
-      Notiflix.Notify.failure(
-        'Oops! Something went wrong! Try reloading the page!',
-        {
-          timeout: 6000,
-        }
-      );
-      loaderEl.classList.add('hidden');
+fetchBreeds()
+  .then(cats => {
+    cats.forEach(cat => {
+      markupCatOptions(cat);
     });
-}, 1000);
+    selectEl.addEventListener('change', onOptionClick);
+
+    selectEl.classList.remove('hidden');
+    loaderEl.classList.add('hidden');
+  })
+  .catch(error => {
+    Notiflix.Notify.failure(
+      'Oops! Something went wrong! Try reloading the page!',
+      {
+        timeout: 6000,
+      }
+    );
+  })
+  .finally(() => loaderEl.classList.add('hidden'));
 
 function markupCatOptions(objectCat) {
   const { id, name } = objectCat;
@@ -45,24 +43,22 @@ function onOptionClick(event) {
   loaderEl.classList.remove('hidden');
   catInfoEl.classList.add('hidden');
 
-  setTimeout(() => {
-    fetchCatByBreed(catOption)
-      .then(cats => {
-        markupCatFullInfo(...cats);
+  fetchCatByBreed(catOption)
+    .then(cats => {
+      markupCatFullInfo(...cats);
 
-        loaderEl.classList.add('hidden');
-        catInfoEl.classList.remove('hidden');
-      })
-      .catch(error => {
-        Notiflix.Notify.failure(
-          'Oops! Something went wrong! Try reloading the page!',
-          {
-            timeout: 6000,
-          }
-        );
-        loaderEl.classList.add('hidden');
-      });
-  }, 1000);
+      loaderEl.classList.add('hidden');
+      catInfoEl.classList.remove('hidden');
+    })
+    .catch(error => {
+      Notiflix.Notify.failure(
+        'Oops! Something went wrong! Try reloading the page!',
+        {
+          timeout: 6000,
+        }
+      );
+    })
+    .finally(() => loaderEl.classList.add('hidden'));
 }
 
 function markupCatFullInfo(objectFullCat) {
